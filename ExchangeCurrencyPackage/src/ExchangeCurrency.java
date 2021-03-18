@@ -125,10 +125,14 @@ public class ExchangeCurrency  extends JFrame{
         addOrRemoveCurrencyPanel=new JPanel(new GridLayout(2,1,0,5));
         addOrRemoveCurrencyPanel.add(addCurrencyButton=new JButton("Add Currency."));
         addCurrencyButton.addActionListener(event->{
-            addToCombo(combo1,combo2);
+            addCurrencyToCombo(combo1,combo2);
         });
         //System.out.println(addCurrencyButton.getPreferredSize().toString());
         addOrRemoveCurrencyPanel.add(removeCurrencyButton=new JButton("Remove Currency."));
+        removeCurrencyButton.setToolTipText("Set Currency to remove in both combo boxes in the first combo box");
+        removeCurrencyButton.addActionListener(event->{
+            removeCurrencyFromCombo(combo1,combo2);
+        });
         add(addOrRemoveCurrencyPanel,BorderLayout.EAST);
 
         westPanel=new JPanel();
@@ -148,16 +152,17 @@ public class ExchangeCurrency  extends JFrame{
             e.printStackTrace();
         }
     }
-    private static void addToCombo(JComboBox<String>combo1,JComboBox<String>combo2){
-        String newCurrency = "";
-        while(newCurrency.equals(""))
-        {
+    private static void addCurrencyToCombo(JComboBox<String>combo1, JComboBox<String>combo2){
+            String newCurrency = "";
             newCurrency = JOptionPane.showInputDialog(null,"Type your currency to add in the Input field","Currency adding",JOptionPane.PLAIN_MESSAGE);
             System.out.println(newCurrency);
-            if(newCurrency!=null){
-                JOptionPane.showMessageDialog(null,"Input field can't be empty!","Error message nr.3",JOptionPane.ERROR_MESSAGE);// nie działa
+            if(newCurrency==null){
+                JOptionPane.showMessageDialog(null,"Input field can't be empty!","Error message nr.3",JOptionPane.ERROR_MESSAGE);
             }
-            else if(!newCurrency.equals("")){
+            else if(newCurrency.equals("")){
+                JOptionPane.showMessageDialog(null,"Input field can't be empty!","Error message nr.3",JOptionPane.ERROR_MESSAGE);
+            }
+            else{
                 combo1.addItem(newCurrency);
                 combo2.addItem(newCurrency);
                 try(PrintWriter out=new PrintWriter("src\\Currencies.txt", String.valueOf(StandardCharsets.UTF_8))){
@@ -170,10 +175,26 @@ public class ExchangeCurrency  extends JFrame{
                     e.printStackTrace();
                 }
             }
-            else{
-                JOptionPane.showMessageDialog(null,"Input field can't be empty!","Error message nr.3",JOptionPane.ERROR_MESSAGE);// nie działa
+         }
+         private static void removeCurrencyFromCombo(JComboBox<String>combo1, JComboBox<String>combo2){
+            int index = combo1.getSelectedIndex();
+             System.out.println(index);
+            if(index!=0){
+                combo1.removeItemAt(index);
+                combo2.removeItemAt(index);
+                try(PrintWriter out=new PrintWriter("src\\Currencies.txt", String.valueOf(StandardCharsets.UTF_8))){
+                    String text="";
+                    for(int i=0;i<combo2.getItemCount();i++){
+                        text=text+combo2.getItemAt(i)+"\n";
+                    }
+                    out.print(text);
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
             }
-        }
-    }
+            else
+                JOptionPane.showMessageDialog(null,"This field can't be removed!","Error message nr.4",JOptionPane.ERROR_MESSAGE);
+
+         }
 
 }
