@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 
 public class ExchangeCurrency  extends JFrame{
@@ -9,10 +13,15 @@ public class ExchangeCurrency  extends JFrame{
     private JPanel panel3;
     private JPanel panel4;
     private JPanel panel5;
+    private JPanel addOrRemoveCurrencyPanel;
+    private JPanel westPanel;
     private JLabel title;
     private static JComboBox combo1;
     private static JComboBox combo2;
     private JButton button;
+    private JButton addCurrencyButton;
+    private JButton removeCurrencyButton;
+    private JButton loadButton;
     private FlowLayout manager;
     private Font font;
     private Offerts offerts;
@@ -39,7 +48,7 @@ public class ExchangeCurrency  extends JFrame{
         setLayout(new BorderLayout());
         setTitle("Currency Exchange");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(600,250);
+       // setSize(600,250);
        this.setBounds(350,250,600,250);
 
 
@@ -60,37 +69,22 @@ public class ExchangeCurrency  extends JFrame{
 
         panel4=new JPanel(manager);
         panel4.add(combo1=new JComboBox<String>());
-
-        combo1.addItem("");
-        combo1.addItem("PLN");
-        combo1.addItem("$");
-        combo1.addItem("€");
-        combo1.addItem("£");
-        combo1.addItem("CAD");
-        combo1.addItem("CHF");
-        combo1.addItem("¥");
-
+        readCurrencies(combo1);
         combo1.addActionListener(event->{
             baseCurrency = combo1.getItemAt(combo1.getSelectedIndex()).toString();
-            //System.out.println(baseCurrency);
+            System.out.println(baseCurrency);
+            //JOptionPane.showMessageDialog(null,"Currency must be chosen!","Error Message 1",JOptionPane.ERROR_MESSAGE);
         });
 
         panel4.add(combo2=new JComboBox<String>());
-
-        combo2.addItem("");
-        combo2.addItem("PLN");
-        combo2.addItem("$");
-        combo2.addItem("€");
-        combo2.addItem("£");
-        combo2.addItem("CAD");
-        combo2.addItem("CHF");
-        combo2.addItem("¥");
+        readCurrencies(combo2);
         combo2.addActionListener(event->{
-           quoteCurrency =combo2.getItemAt(combo2.getSelectedIndex()).toString();
-           //System.out.println(quoteCurrency);
-           });
+            quoteCurrency =combo2.getItemAt(combo2.getSelectedIndex()).toString();
+            System.out.println(quoteCurrency);
+            //JOptionPane.showMessageDialog(null,"Currency must be chosen!","Error Message 1",JOptionPane.ERROR_MESSAGE);
+        });
 
-        panel5=new JPanel(new GridLayout(2,1));
+        panel5=new JPanel(new GridLayout(2,2,5,5));
         panel5.add(panel2);
         panel5.add(panel4);
         add(panel5,BorderLayout.CENTER);
@@ -103,22 +97,19 @@ public class ExchangeCurrency  extends JFrame{
         panel3.add(button=new JButton("See exchange offerts!"));
         button.addActionListener(event-> {
 
-                if((baseCurrency==""|| baseCurrency==null) || (quoteCurrency==""|| quoteCurrency==null)) {
-                    JOptionPane.showMessageDialog(null,"Both currencies must be chosen!","Error Message 1",JOptionPane.ERROR_MESSAGE);
-
+                if((baseCurrency==null || baseCurrency.equals("")) || (quoteCurrency==null)||quoteCurrency.equals("")) {//wywołanie metody na wartości null jest błędem!
+                    JOptionPane.showMessageDialog(null,"Currencies must be chosen!","Error Message 1",JOptionPane.ERROR_MESSAGE);
                 }
-                else{
-                    if(baseCurrency==quoteCurrency){
+                else if(baseCurrency.equals(quoteCurrency))
+                    {
                         JOptionPane.showMessageDialog(null,"You must choose two diffrent currencies!","Error Message 2",JOptionPane.ERROR_MESSAGE);
-
                     }
                     else{
                         offerts= new Offerts();
                         this.setVisible(false);
                         offerts.setVisible(true);
-
                     }
-                }
+
             System.out.println("_____________");
             System.out.println(baseCurrency);
             System.out.println(quoteCurrency);
@@ -131,6 +122,58 @@ public class ExchangeCurrency  extends JFrame{
         panel3.add(new JLabel());
         add(panel3,BorderLayout.SOUTH);
 
+        addOrRemoveCurrencyPanel=new JPanel(new GridLayout(2,1,0,5));
+        addOrRemoveCurrencyPanel.add(addCurrencyButton=new JButton("Add Currency."));
+        addCurrencyButton.addActionListener(event->{
+            addToCombo(combo1,combo2);
+        });
+        //System.out.println(addCurrencyButton.getPreferredSize().toString());
+        addOrRemoveCurrencyPanel.add(removeCurrencyButton=new JButton("Remove Currency."));
+        add(addOrRemoveCurrencyPanel,BorderLayout.EAST);
 
+        westPanel=new JPanel();
+        westPanel.add(loadButton=new JButton("Load quotations"));
+        //loadButton.setPreferredSize(new Dimension(114,30));
+        add(westPanel,BorderLayout.WEST);
     }
+    private static void readCurrencies(JComboBox<String> combo){
+        String currencyOut;
+        try (Scanner scanner=new Scanner(new File("src\\Currencies.txt")))
+        {
+            while(scanner.hasNext()){
+                currencyOut= scanner.nextLine();
+                combo.addItem(currencyOut);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private static void addToCombo(JComboBox<String>combo1,JComboBox<String>combo2){
+        String newCurrency = "";
+        while(newCurrency.equals(""))
+        {
+            newCurrency = JOptionPane.showInputDialog(null,"Type your currency to add in the Input field","Currency adding",JOptionPane.PLAIN_MESSAGE);
+            System.out.println(newCurrency);
+            if(newCurrency!=null){
+                JOptionPane.showMessageDialog(null,"Input field can't be empty!","Error message nr.3",JOptionPane.ERROR_MESSAGE);// nie działa
+            }
+            else if(!newCurrency.equals("")){
+                combo1.addItem(newCurrency);
+                combo2.addItem(newCurrency);
+                try(PrintWriter out=new PrintWriter("src\\Currencies.txt", String.valueOf(StandardCharsets.UTF_8))){
+                    String text="";
+                    for(int i=0;i<combo2.getItemCount();i++){
+                        text=text+combo2.getItemAt(i)+"\n";
+                    }
+                    out.print(text);
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Input field can't be empty!","Error message nr.3",JOptionPane.ERROR_MESSAGE);// nie działa
+            }
+        }
+    }
+
 }
