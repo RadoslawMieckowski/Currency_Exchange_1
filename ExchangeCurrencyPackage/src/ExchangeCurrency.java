@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +28,12 @@ public class ExchangeCurrency  extends JFrame{
     private Offerts offerts;
     private static String baseCurrency;
     private static String quoteCurrency;
+    private JFileChooser chooser;
+    private static File choosedFile;
+
+    public static File getChoosedFile() {
+        return choosedFile;
+    }
 
     public static String getBaseCurrency() {
         return baseCurrency;
@@ -137,7 +144,17 @@ public class ExchangeCurrency  extends JFrame{
 
         westPanel=new JPanel();
         westPanel.add(loadButton=new JButton("Load quotations"));
-        //loadButton.setPreferredSize(new Dimension(114,30));
+        choosedFile=new File("src/ExchangeRates.txt");
+        loadButton.addActionListener(event->{
+            chooser=new JFileChooser();
+            chooser.setCurrentDirectory(new File("./src"));
+            chooser.setSelectedFile(new File("src/ExchangeRates.txt"));
+            chooser.setFileFilter(new FileNameExtensionFilter("Text files","txt","csv","rtf","doc"));//nie działa
+            int result=chooser.showOpenDialog(this);
+            choosedFile=chooser.getSelectedFile();
+            String fileName=choosedFile.getPath();
+            System.out.println(fileName);
+        });
         add(westPanel,BorderLayout.WEST);
     }
     private static void readCurrencies(JComboBox<String> combo){
