@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class Results extends JFrame {
 
+    private final int FRAME_WIDTH=600;
+    private final int FRAME_HEIGHT=250;
     private JPanel panel1;
     private JLabel title;
     private Font font;
@@ -25,8 +27,11 @@ public class Results extends JFrame {
         setLayout(new BorderLayout());
         setTitle("Currency Exchange");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(600,250);
-        this.setBounds(350,250,600,250);
+        Toolkit kit= Toolkit.getDefaultToolkit();
+        Dimension screenSize=kit.getScreenSize();
+        int screenWidth=screenSize.width;
+        int screenHeight=screenSize.height;
+        this.setBounds(screenWidth/2-FRAME_WIDTH/2, screenHeight/2-FRAME_HEIGHT/2, FRAME_WIDTH, FRAME_HEIGHT);
 
         font= new Font("SansSerif",Font.BOLD+Font.ITALIC,16);
 

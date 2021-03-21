@@ -3,18 +3,20 @@ import java.awt.*;
 
 
 public class Offerts extends JFrame {
- private Font font;
- private JPanel panel1;
- private JLabel title;
- private JPanel choisePanel;
- private JComboBox combo;
- private JButton button;
- private JPanel boxpanel;
- private Results results;
- private int chosenAction;
- private Mechanism mech;
- private static String[] columnNames={"Offer number","currency pair","Purchase","Sale","Spread(b.p.)","Margin(b.p.)"};
- private JTable table;
+    private final int FRAME_WIDTH=600;
+    private final int FRAME_HEIGHT=250;
+    private Font font;
+    private JPanel panel1;
+    private JLabel title;
+    private JPanel choisePanel;
+    private JComboBox combo;
+    private JButton button;
+    private JPanel boxpanel;
+    private Results results;
+    private int chosenAction;
+    private Mechanism mech;
+    private static String[] columnNames={"Offer number","currency pair","Purchase","Sale","Spread(b.p.)","Margin(b.p.)"};
+    private JTable table;
 
     public static String[] getColumnNames() {
         return columnNames;
@@ -24,8 +26,11 @@ public class Offerts extends JFrame {
         setLayout(new BorderLayout());
         setTitle("Currency Exchange");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(600,250);
-        this.setBounds(350,250,600,250);
+        Toolkit kit= Toolkit.getDefaultToolkit();
+        Dimension screenSize=kit.getScreenSize();
+        int screenWidth=screenSize.width;
+        int screenHeight=screenSize.height;
+        this.setBounds(screenWidth/2-FRAME_WIDTH/2, screenHeight/2-FRAME_HEIGHT/2, FRAME_WIDTH, FRAME_HEIGHT);
 
         font= new Font("SansSerif",Font.BOLD+Font.ITALIC,16);
 
