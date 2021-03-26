@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+/**
+*@author Radosław Mieckowski
+*/
 
 
 public class Offerts extends JFrame {
