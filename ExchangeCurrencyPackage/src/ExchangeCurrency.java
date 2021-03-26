@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+/**
+*@author Radosław Mieckowski
+*/
 
 
 public class ExchangeCurrency  extends JFrame{
