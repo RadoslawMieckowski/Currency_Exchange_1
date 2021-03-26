@@ -2,7 +2,9 @@ import javax.swing.*;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-
+/**
+*@author Radosław Mieckowski
+*/
 public class Results extends JFrame {
 
     private final int FRAME_WIDTH=600;
