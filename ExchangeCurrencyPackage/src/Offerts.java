@@ -34,6 +34,7 @@ public class Offerts extends JFrame {
         int screenWidth=screenSize.width;
         int screenHeight=screenSize.height;
         this.setBounds(screenWidth/2-FRAME_WIDTH/2, screenHeight/2-FRAME_HEIGHT/2, FRAME_WIDTH, FRAME_HEIGHT);
+        setResizable(false);
 
         font= new Font("SansSerif",Font.BOLD+Font.ITALIC,16);
 
