@@ -1,0 +1,11 @@
+
+$
+€
+£
+CAD
+CHF
+¥
+NOK
+CZK
+UHD
+PLN
